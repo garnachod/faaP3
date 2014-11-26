@@ -19,6 +19,6 @@ public abstract class IndividuoGenetico {
      * @param numeroElementosDiferentesPorColumna es necesario para generar el individuo
      */
     public abstract void inicializaIndividuo(ArrayList<Integer> numeroElementosDiferentesPorColumna);
-    
-    //añadir más funcionalidad como cruzar o mutar
+    public abstract ArrayList<IndividuoGenetico> cruzar(IndividuoGenetico individuo);
+    public abstract IndividuoGenetico mutar();
 }
