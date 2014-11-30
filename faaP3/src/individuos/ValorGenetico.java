@@ -13,5 +13,19 @@ import datos.Elemento;
  */
 public class ValorGenetico {
     Boolean valor;
-    Elemento significado;
+    String significado;
+    
+    public ValorGenetico(Boolean valorP){
+        this.valor = valorP;
+    }
+    public ValorGenetico(Boolean valorP, String signf){
+        this.valor = valorP;
+        this.significado = signf;
+    }
+    public Boolean getValor(){
+        return this.valor;
+    }
+    public String getSignificado(){
+        return this.significado;
+    }
 }

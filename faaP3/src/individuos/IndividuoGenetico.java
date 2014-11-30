@@ -6,6 +6,7 @@
 package individuos;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -18,7 +19,9 @@ public abstract class IndividuoGenetico {
      * 
      * @param numeroElementosDiferentesPorColumna es necesario para generar el individuo
      */
-    public abstract void inicializaIndividuo(ArrayList<Integer> numeroElementosDiferentesPorColumna);
+    
+    public abstract void inicializaIndividuo(ArrayList<HashMap<String, Integer>> nElemDistintosPorColumna);
     public abstract ArrayList<IndividuoGenetico> cruzar(IndividuoGenetico individuo);
     public abstract IndividuoGenetico mutar();
+    public abstract String getClase(ReglaGenetica reglaAComparar);
 }

@@ -5,7 +5,10 @@
  */
 package individuos;
 
+import datos.Elemento;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  *
@@ -14,5 +17,73 @@ import java.util.ArrayList;
 public class AtributoGenetico {
     //un atributo genetico es una lista de elementos binarios
     //
-    ArrayList<ValorGenetico> valoresGeneticos;
+    private ArrayList<ValorGenetico> valoresGeneticos;
+    
+    public AtributoGenetico(){
+        this.valoresGeneticos = new ArrayList<>();
+    }
+    
+    public void inicializaAleatorio(int nValores){
+        for(int i =0; i< nValores; i++){
+            if(Math.random() >= 0.500000){
+                ValorGenetico valor = new ValorGenetico(true);
+                this.valoresGeneticos.add(valor);
+            }else{
+                ValorGenetico valor = new ValorGenetico(false);
+                this.valoresGeneticos.add(valor);
+            }
+        }
+    }
+    
+    public void inicializaSignificado(HashMap<String, Integer> hasmSignificado){
+        Set<String> significados = hasmSignificado.keySet();
+        for(String significado : significados){
+            Integer count = hasmSignificado.get(significado);
+            if(count >= 1){
+                ValorGenetico valor = new ValorGenetico(true, significado);
+                this.valoresGeneticos.add(valor);
+            }else{
+                ValorGenetico valor = new ValorGenetico(false, significado);
+                this.valoresGeneticos.add(valor);
+            }
+            
+        }
+    }
+    public void inicializaSignificadoClasificacion(HashMap<String, Integer> hasmSignificado, Elemento elem){
+        Set<String> significados = hasmSignificado.keySet();
+        for(String significado : significados){
+            if(significado.equals(elem.getValorNominal())){
+                ValorGenetico valor = new ValorGenetico(true, significado);
+                this.valoresGeneticos.add(valor);
+            }else{
+                ValorGenetico valor = new ValorGenetico(false, significado);
+                this.valoresGeneticos.add(valor);
+            }
+            
+        }
+    }
+    
+    public void inicializaSignifAleatorio(HashMap<String, Integer> hasmSignificado){
+        Set<String> significados = hasmSignificado.keySet();
+        for(String significado : significados){
+            if(Math.random() >= 0.5){
+                ValorGenetico valor = new ValorGenetico(true, significado);
+                this.valoresGeneticos.add(valor);
+            }else{
+                ValorGenetico valor = new ValorGenetico(false, significado);
+                this.valoresGeneticos.add(valor);
+            }
+        }
+    }
+     
+    public Boolean cumpleCondicion(AtributoGenetico debeCumplir){
+        for(int i = 0; i < this.valoresGeneticos.size(); i++){
+            Boolean condicionTest  = this.valoresGeneticos.get(i).getValor();
+            Boolean condicionToTest = debeCumplir.valoresGeneticos.get(i).getValor();
+            if(condicionTest == false && condicionToTest == true){
+                return false;
+            }
+        }
+        return true;
+    }
 }

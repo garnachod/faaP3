@@ -83,7 +83,7 @@ abstract public class Clasificador {
         }
         //EstrategiaParticionado estrategia = new DivisionPorcentual();
         EstrategiaParticionado estrategia = new ValidacionCruzada();
-        Clasificador clasificador = new ClasificadorNaiveBayes();
+        /*Clasificador clasificador = new ClasificadorNaiveBayes();
         Clasificador clasificador2 = new ClasificadorNaiveBayesLaplace();
         Clasificador clasificador3 = new ClasificadorKNN();
         Clasificador clasificador4 = new ClasificadorRegresionLogistica();
@@ -107,9 +107,12 @@ abstract public class Clasificador {
         //regresion logistica
         ArrayList<Double> errores4= Clasificador.validacion(estrategia, datos, clasificador4);
         System.out.println("Los errores con regresion logistica son: " + errores4);
-        System.out.println("Error medio con regresion logistica: " + calcularMediaErrores(errores4));
+        System.out.println("Error medio con regresion logistica: " + calcularMediaErrores(errores4));*/
         
         
-        
+        Clasificador clasificador = new ClasificadorGenetico();
+        ArrayList<Double> errores4= Clasificador.validacion(estrategia, datos, clasificador);
+        System.out.println("Los errores con algoritmo genetico son: " + errores4);
+        System.out.println("Error medio con algoritmo genetico: " + calcularMediaErrores(errores4));
     }
 }
