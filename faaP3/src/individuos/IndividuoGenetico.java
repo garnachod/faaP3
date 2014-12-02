@@ -20,6 +20,8 @@ public abstract class IndividuoGenetico {
      * @param numeroElementosDiferentesPorColumna es necesario para generar el individuo
      */
     
+    ArrayList<ReglaGenetica> reglas;
+    
     public abstract void inicializaIndividuo(ArrayList<HashMap<String, Integer>> nElemDistintosPorColumna);
     public abstract ArrayList<IndividuoGenetico> cruzar(IndividuoGenetico individuo);
     public abstract IndividuoGenetico mutar();

@@ -3,13 +3,15 @@ package individuos;
 import datos.Elemento;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  *
  * @author Diego Castaño y Daniel Garnacho
  */
 public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
-    ArrayList<ReglaGenetica> reglas;
+
+    private static Random random = new Random();
     
     public IndividuoGeneticoPittsburgh(){
         this.reglas = new ArrayList<>();
@@ -40,14 +42,56 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
        return ultimaRegla.getValueConclusion();
     }
 
+    
+    // Devuelve 1 ó 0
+    private int lanzarMoneda () {
+        return random.nextInt(2);
+    }
+    
+    private ArrayList<IndividuoGenetico> cruzarUniforme(IndividuoGenetico individuo) {
+        
+        ArrayList<IndividuoGenetico> hijos = new ArrayList<>();
+        IndividuoGeneticoPittsburgh hijo1 = new IndividuoGeneticoPittsburgh();
+        IndividuoGeneticoPittsburgh hijo2 = new IndividuoGeneticoPittsburgh();
+        
+        // Inicializar reglas como el padre
+        hijo1.reglas = this.reglas;
+        hijo2.reglas = this.reglas;
+        
+        // Para cada atributo se lanza moneda. Si sale cara se coge atributo de la madre
+        for (int i = 0; i < hijo1.reglas.size(); i++) {
+            for (int j = 0; j < hijo1.reglas.get(i).condiciones.size(); j++) {
+               if (lanzarMoneda() == 0) {
+                   hijo1.reglas.get(i).condiciones.remove(j);
+                   hijo1.reglas.get(i).condiciones.add(individuo.reglas.get(i).condiciones.get(j));
+               }
+            }
+        }
+        
+        // Para cada atributo se lanza moneda. Si sale cara se coge atributo de la madre
+        for (int i = 0; i < hijo2.reglas.size(); i++) {
+            for (int j = 0; j < hijo2.reglas.get(i).condiciones.size(); j++) {
+               if (lanzarMoneda() == 0) {
+                   hijo2.reglas.get(i).condiciones.remove(j);
+                   hijo2.reglas.get(i).condiciones.add(individuo.reglas.get(i).condiciones.get(j));
+               }
+            }
+        }
+        
+        hijos.add(hijo1);
+        hijos.add(hijo2);
+        return hijos;
+    }
+    
     @Override
     public ArrayList<IndividuoGenetico> cruzar(IndividuoGenetico individuo) {
-        //vamos a cruzar a nivel de atributos geneticos
-        
+        return cruzarUniforme(individuo);
     }
-
+        
     @Override
     public IndividuoGenetico mutar() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+
 }
