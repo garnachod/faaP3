@@ -116,6 +116,46 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
         return hijos;
     }
     
+    private ArrayList<IndividuoGenetico> cruzarEnDosPuntos(IndividuoGenetico individuo) {
+        
+        ArrayList<IndividuoGenetico> hijos = new ArrayList<>();
+
+        IndividuoGeneticoPittsburgh hijo1 = (IndividuoGeneticoPittsburgh) this.clone();
+        IndividuoGeneticoPittsburgh hijo2 = (IndividuoGeneticoPittsburgh) individuo.clone();
+        
+        // Se elige dos puntos al azar
+        int numAtributos = this.reglas.size() * this.reglas.get(0).condiciones.size();
+
+        int puntoCruce1 = GestorRand.getInt(numAtributos);
+        int puntoCruce2;
+        do {
+            puntoCruce2 = GestorRand.getInt(numAtributos);
+        } while (puntoCruce2 < puntoCruce1);
+
+        int contadorAtributos = 0;
+        for (int i = 0; i < this.reglas.size(); i++) {
+            for (int j = 0; j < this.reglas.get(i).condiciones.size(); j++) {
+                
+                if (contadorAtributos > puntoCruce1 && contadorAtributos < puntoCruce2) {
+                    
+                    AtributoGenetico atributoHijo1 = hijo1.reglas.get(i).condiciones.get(j);
+                    AtributoGenetico atributoHijo2 = hijo2.reglas.get(i).condiciones.get(j);
+                    
+                    hijo1.reglas.get(i).condiciones.remove(j);
+                    hijo2.reglas.get(i).condiciones.remove(j);
+                    
+                    hijo1.reglas.get(i).condiciones.add(j, atributoHijo2);
+                    hijo2.reglas.get(i).condiciones.add(j, atributoHijo1);
+                }
+                
+                contadorAtributos++;
+            }
+        }
+        
+        hijos.add(hijo1);
+        hijos.add(hijo2);
+        return hijos;
+    }
     
     @Override
     public ArrayList<IndividuoGenetico> cruzar(IndividuoGenetico individuo) {
@@ -123,7 +163,8 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
         Double rand = GestorRand.getDouble();
         if(rand <= probCruce){
             //return cruzarUniforme(individuo);
-            return cruzarEnUnPunto(individuo);
+            //return cruzarEnUnPunto(individuo);
+            return cruzarEnDosPuntos(individuo);
         } else {
             ArrayList<IndividuoGenetico> padres = new ArrayList<>();
             padres.add(this);

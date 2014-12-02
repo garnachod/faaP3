@@ -17,7 +17,7 @@ import java.util.HashMap;
  * @author diego.castaño
  */
 public class ClasificadorGenetico extends Clasificador {
-    private int tam_poblacion = 1000;
+    private int tam_poblacion = 100;
     private int nEpocas = 200;
     private int lastMejorSum = 0;
     private IndividuoGenetico individuoClasificador = null;
