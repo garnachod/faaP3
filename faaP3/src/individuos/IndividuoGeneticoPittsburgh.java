@@ -10,8 +10,8 @@ import java.util.Random;
  * @author Diego Castaño y Daniel Garnacho
  */
 public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
-
-    private static Random random = new Random();
+    private static final Double probMutacion = 0.1;
+    private static final Double probCruce = 0.6;
     
     public IndividuoGeneticoPittsburgh(){
         this.reglas = new ArrayList<>();
@@ -43,37 +43,32 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
     }
 
     
-    // Devuelve 1 ó 0
-    private int lanzarMoneda () {
-        return random.nextInt(2);
-    }
+    
     
     private ArrayList<IndividuoGenetico> cruzarUniforme(IndividuoGenetico individuo) {
         
         ArrayList<IndividuoGenetico> hijos = new ArrayList<>();
-        IndividuoGeneticoPittsburgh hijo1 = new IndividuoGeneticoPittsburgh();
-        IndividuoGeneticoPittsburgh hijo2 = new IndividuoGeneticoPittsburgh();
+
+        IndividuoGeneticoPittsburgh hijo1 = (IndividuoGeneticoPittsburgh) this.clone();
+        IndividuoGeneticoPittsburgh hijo2 = (IndividuoGeneticoPittsburgh) individuo.clone();
         
-        // Inicializar reglas como el padre
-        hijo1.reglas = new ArrayList<>(this.reglas);
-        hijo2.reglas = new ArrayList<>(this.reglas);
         
         // Para cada atributo se lanza moneda. Si sale cara se coge atributo de la madre
-        for (int i = 0; i < hijo1.reglas.size(); i++) {
-            for (int j = 0; j < hijo1.reglas.get(i).condiciones.size(); j++) {
-               if (lanzarMoneda() == 0) {
+        for (int i = 0; i < individuo.reglas.size(); i++) {
+            for (int j = 0; j < individuo.reglas.get(i).condiciones.size(); j++) {
+               if (GestorRand.lanzarMoneda() == 0) {
                    hijo1.reglas.get(i).condiciones.remove(j);
-                   hijo1.reglas.get(i).condiciones.add(individuo.reglas.get(i).condiciones.get(j));
+                   hijo1.reglas.get(i).condiciones.add(j, individuo.reglas.get(i).condiciones.get(j));
                }
             }
         }
         
         // Para cada atributo se lanza moneda. Si sale cara se coge atributo de la madre
-        for (int i = 0; i < hijo2.reglas.size(); i++) {
-            for (int j = 0; j < hijo2.reglas.get(i).condiciones.size(); j++) {
-               if (lanzarMoneda() == 0) {
+        for (int i = 0; i < individuo.reglas.size(); i++) {
+            for (int j = 0; j < individuo.reglas.get(i).condiciones.size(); j++) {
+               if (GestorRand.lanzarMoneda() == 0) {
                    hijo2.reglas.get(i).condiciones.remove(j);
-                   hijo2.reglas.get(i).condiciones.add(individuo.reglas.get(i).condiciones.get(j));
+                   hijo2.reglas.get(i).condiciones.add(j, this.reglas.get(i).condiciones.get(j));
                }
             }
         }
@@ -89,9 +84,25 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
     }
         
     @Override
-    public IndividuoGenetico mutar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void mutar() {
+        
     }
-
+    
+    private void mutacionAtributoGenetico(){
+        Double rand = GestorRand.getDouble();
+        if(rand <= probMutacion){
+            int nReglas = this.reglas.size();
+            int indexRegla = GestorRand.getInt(nReglas);
+            this.reglas.get(indexRegla).mutaUnaCondicion();
+        }
+    }
+    @Override
+    public Object clone(){
+        IndividuoGeneticoPittsburgh clon = new IndividuoGeneticoPittsburgh();
+        for(ReglaGenetica r : this.reglas){
+            clon.reglas.add((ReglaGenetica)r.clone());
+        }
+        return clon;
+    }
 
 }

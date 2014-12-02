@@ -11,7 +11,7 @@ import datos.Elemento;
  *
  * @author dani
  */
-public class ValorGenetico {
+public class ValorGenetico implements Cloneable {
     Boolean valor;
     String significado;
     
@@ -27,5 +27,11 @@ public class ValorGenetico {
     }
     public String getSignificado(){
         return this.significado;
+    }
+    
+    @Override
+    public Object clone(){
+        ValorGenetico clon = new ValorGenetico(this.valor, this.significado);
+        return clon;
     }
 }

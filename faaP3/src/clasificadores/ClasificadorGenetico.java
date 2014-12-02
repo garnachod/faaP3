@@ -6,6 +6,8 @@ import datos.ElementoNominal;
 import individuos.IndividuoGenetico;
 import individuos.IndividuoGeneticoPittsburgh;
 import individuos.ReglaGenetica;
+import individuos.RuletaPonderada;
+import individuos.SeccionRuletaPonderada;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,9 +16,10 @@ import java.util.HashMap;
  * @author diego.castaño
  */
 public class ClasificadorGenetico extends Clasificador {
-    private int tam_poblacion = 100;
-    private int nEpocas = 10;
-    private IndividuoGenetico individuoClasificador;
+    private int tam_poblacion = 1000;
+    private int nEpocas = 200;
+    private int lastMejorSum = 0;
+    private IndividuoGenetico individuoClasificador = null;
     private ArrayList<IndividuoGenetico> poblacion = new ArrayList<>();
     private ArrayList<HashMap<String, Integer>> nElemDistintosPorColumna;
     
@@ -71,11 +74,65 @@ public class ClasificadorGenetico extends Clasificador {
             }
             this.poblacion = nuevaPoblacion;
             //mutacion
+            for(int j = 0; j < this.tam_poblacion; j++){
+                IndividuoGenetico ind = this.poblacion.get(j);
+                ind.mutar();
+            }
+           
+            //seleccion de progenitores
+                //ruleta ponderada
+            ArrayList<SeccionRuletaPonderada> seccionesRuleta = new ArrayList<>();
+                //generamos las secciones
+            for(int j = 0; j < this.tam_poblacion; j++){
+                IndividuoGenetico ind = this.poblacion.get(j);
+                SeccionRuletaPonderada seccion = new SeccionRuletaPonderada(ind);
+                seccionesRuleta.add(seccion);
+            }
+                //por cada elemento en test, llamamos a test de la seccion
+            for(Elemento[] fila: datos){
+                ReglaGenetica individuoTest = this.generaReglaFila(fila);
+                String clase = fila[fila.length-1].getValorNominal();
+                for(int j = 0; j < seccionesRuleta.size(); j++){
+                    SeccionRuletaPonderada seccion = seccionesRuleta.get(j);
+                    seccion.testClase(individuoTest, clase);
+                }
+            }
+                //add a la ruleta de las secciones
+                //generamos la ruleta
+            RuletaPonderada ruleta = new RuletaPonderada();
+            for(SeccionRuletaPonderada s: seccionesRuleta ){
+                ruleta.addElemento(s);
+            }
+            System.out.println(ruleta.getSuma());
+            nuevaPoblacion = new ArrayList<>();
+            if(this.individuoClasificador == null){
+                for(int j = 0; j < this.tam_poblacion; j++){
+                    nuevaPoblacion.add(ruleta.getIndividuo());
+                }
+            }else{
+                for(int j = 0; j < this.tam_poblacion - 2; j++){
+                    nuevaPoblacion.add((IndividuoGenetico)ruleta.getIndividuo().clone());
+                }
+                nuevaPoblacion.add((IndividuoGenetico)individuoClasificador.clone());
+                nuevaPoblacion.add((IndividuoGenetico)individuoClasificador.clone());
+            }
+           
+            
+            this.poblacion = nuevaPoblacion;
+            
+            SeccionRuletaPonderada mejorSeccion = ruleta.getMejorSeccion();
+            if(this.lastMejorSum <= mejorSeccion.getAciertos()){
+                this.individuoClasificador = mejorSeccion.getIndividuo();
+                this.lastMejorSum  = ruleta.getSuma();
+            }
+            
+            //System.out.println();
         }
         
         
+        //this.individuoClasificador = ruleta.getMejor();
         //obtencion del mejor clasificador
-        this.individuoClasificador = this.poblacion.get(0);
+        //this.individuoClasificador = this.poblacion.get(0);
     }
 
     @Override
@@ -86,17 +143,23 @@ public class ClasificadorGenetico extends Clasificador {
         for(Elemento[] fila: datos){
             ReglaGenetica individuoTest = this.generaReglaFila(fila);
             String claseStr = this.individuoClasificador.getClase(individuoTest);
-            
+            System.out.println(claseStr);
             ElementoNominal clase = new ElementoNominal(claseStr);
             clasificacion.add(clase);
         }
+        
         
         return clasificacion;
     }
     
     private ReglaGenetica generaReglaFila(Elemento[] fila){
+        HashMap<String, Integer> clasesHSM =  nElemDistintosPorColumna.get(nElemDistintosPorColumna.size()-1);
+        nElemDistintosPorColumna.remove(nElemDistintosPorColumna.size()-1);
+
         ReglaGenetica regla = new ReglaGenetica();
         regla.inicializaReglaAClasificar(nElemDistintosPorColumna, fila);
+        nElemDistintosPorColumna.add(clasesHSM);
+        
         return regla;
     }
 }

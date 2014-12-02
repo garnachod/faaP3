@@ -12,7 +12,7 @@ import java.util.HashMap;
  *
  * @author dani
  */
-public abstract class IndividuoGenetico {
+public abstract class IndividuoGenetico implements Cloneable {
     /**
      * Inicializa el individuo de la manera que el decida
      * Normalmente aleatoria
@@ -24,6 +24,7 @@ public abstract class IndividuoGenetico {
     
     public abstract void inicializaIndividuo(ArrayList<HashMap<String, Integer>> nElemDistintosPorColumna);
     public abstract ArrayList<IndividuoGenetico> cruzar(IndividuoGenetico individuo);
-    public abstract IndividuoGenetico mutar();
+    public abstract void mutar();
     public abstract String getClase(ReglaGenetica reglaAComparar);
+    public abstract Object clone();
 }

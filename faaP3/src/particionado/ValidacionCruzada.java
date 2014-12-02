@@ -24,12 +24,18 @@ public class ValidacionCruzada implements EstrategiaParticionado {
         
         int numFilasGrupo = numDatos / numParticiones;
         
+        //aleatoriedad
+        ArrayList<Integer> grupoGeneral = new ArrayList<>();
+        for (int i = 0; i < numDatos; i++) {
+            grupoGeneral.add(i);
+        }
+        Collections.shuffle(grupoGeneral);
         // Dividimos en grupos
         ArrayList<ArrayList<Integer>> grupos = new ArrayList<>();
         for (int i = 0; i < numParticiones; i++) {
             ArrayList<Integer> grupo = new ArrayList<>();
             for (int j = i * numFilasGrupo; j < (i+1) * numFilasGrupo; j++) {
-                grupo.add(j);
+                grupo.add(grupoGeneral.get(j));
             }
             Collections.shuffle(grupo);
             grupos.add(grupo);

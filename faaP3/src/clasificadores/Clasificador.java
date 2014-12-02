@@ -83,6 +83,7 @@ abstract public class Clasificador {
         }
         //EstrategiaParticionado estrategia = new DivisionPorcentual();
         EstrategiaParticionado estrategia = new ValidacionCruzada();
+        //EstrategiaParticionado estrategia = new DivisionPorcentual();
         /*Clasificador clasificador = new ClasificadorNaiveBayes();
         Clasificador clasificador2 = new ClasificadorNaiveBayesLaplace();
         Clasificador clasificador3 = new ClasificadorKNN();

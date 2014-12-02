@@ -13,7 +13,7 @@ import java.util.HashMap;
  *
  * @author dani
  */
-public class ReglaGenetica {
+public class ReglaGenetica implements Cloneable {
     ArrayList<AtributoGenetico> condiciones;
     ValorGenetico conclusion;
     
@@ -34,10 +34,13 @@ public class ReglaGenetica {
     }
     
     public void inicializaReglaAClasificar(ArrayList<HashMap<String, Integer>> nElemPerCondicion, Elemento[] fila){
+        int i = 0;
         for(HashMap<String, Integer> hsm : nElemPerCondicion){
             AtributoGenetico condicion = new AtributoGenetico();
-            condicion.inicializaSignificado(hsm);
+            //condicion.inicializaSignificado(hsm);
+            condicion.inicializaSignificadoClasificacion(hsm, fila[i]);
             this.condiciones.add(condicion);
+            i++;
         }
     }
     
@@ -50,8 +53,26 @@ public class ReglaGenetica {
         }
         return true;
     }
+    public void mutaUnaCondicion(){
+        int nCondiciones = this.condiciones.size();
+        int indexCond = GestorRand.getInt(nCondiciones);
+        AtributoGenetico atrib = this.condiciones.get(indexCond);
+        atrib.mutaValorGenetico();
+    }
     
     public String getValueConclusion(){
         return this.conclusion.getSignificado();
+    }
+    
+    @Override
+    public Object clone(){
+        ReglaGenetica clon = new ReglaGenetica();
+        
+        for(AtributoGenetico a: this.condiciones){
+            clon.condiciones.add((AtributoGenetico)a.clone());
+        }
+        clon.conclusion = (ValorGenetico)this.conclusion.clone();
+        
+        return clon;
     }
 }

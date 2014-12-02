@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * @author dani
  */
-public class AtributoGenetico {
+public class AtributoGenetico implements Cloneable {
     //un atributo genetico es una lista de elementos binarios
     //
     private ArrayList<ValorGenetico> valoresGeneticos;
@@ -24,7 +24,7 @@ public class AtributoGenetico {
     }
     
     public void inicializaAleatorio(int nValores){
-        for(int i =0; i< nValores; i++){
+        for(int i = 0 ; i < nValores; i++){
             if(Math.random() >= 0.500000){
                 ValorGenetico valor = new ValorGenetico(true);
                 this.valoresGeneticos.add(valor);
@@ -66,7 +66,7 @@ public class AtributoGenetico {
     public void inicializaSignifAleatorio(HashMap<String, Integer> hasmSignificado){
         Set<String> significados = hasmSignificado.keySet();
         for(String significado : significados){
-            if(Math.random() >= 0.5){
+            if(GestorRand.getDouble() >= 0.5){
                 ValorGenetico valor = new ValorGenetico(true, significado);
                 this.valoresGeneticos.add(valor);
             }else{
@@ -85,5 +85,25 @@ public class AtributoGenetico {
             }
         }
         return true;
+    }
+    
+    public void mutaValorGenetico(){
+        int nValores = this.valoresGeneticos.size();
+        int indexVal= GestorRand.getInt(nValores);
+        ValorGenetico val = this.valoresGeneticos.get(indexVal);
+        
+        if(val.valor == true){
+            val.valor = false;
+        }else{
+            val.valor = true;
+        }
+    }
+    @Override
+    public Object clone(){
+        AtributoGenetico clon = new AtributoGenetico();
+        for(ValorGenetico v : this.valoresGeneticos){
+            clon.valoresGeneticos.add((ValorGenetico)v.clone());
+        }
+        return clon;
     }
 }
