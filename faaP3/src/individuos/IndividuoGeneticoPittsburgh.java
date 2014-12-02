@@ -55,8 +55,8 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
         IndividuoGeneticoPittsburgh hijo2 = new IndividuoGeneticoPittsburgh();
         
         // Inicializar reglas como el padre
-        hijo1.reglas = this.reglas;
-        hijo2.reglas = this.reglas;
+        hijo1.reglas = new ArrayList<>(this.reglas);
+        hijo2.reglas = new ArrayList<>(this.reglas);
         
         // Para cada atributo se lanza moneda. Si sale cara se coge atributo de la madre
         for (int i = 0; i < hijo1.reglas.size(); i++) {
