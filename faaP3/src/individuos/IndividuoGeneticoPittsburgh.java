@@ -78,24 +78,74 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
         return hijos;
     }
     
+    private ArrayList<IndividuoGenetico> cruzarEnUnPunto(IndividuoGenetico individuo) {
+        
+        ArrayList<IndividuoGenetico> hijos = new ArrayList<>();
+
+        IndividuoGeneticoPittsburgh hijo1 = (IndividuoGeneticoPittsburgh) this.clone();
+        IndividuoGeneticoPittsburgh hijo2 = (IndividuoGeneticoPittsburgh) individuo.clone();
+        
+        // Se elige un punto al azar
+        int numAtributos = this.reglas.size() * this.reglas.get(0).condiciones.size();
+        int puntoCruce = GestorRand.getInt(numAtributos);
+        
+        // A partir de dicho punto se intercambian atributos
+        int contadorAtributos = 0;
+        
+        for (int i = 0; i < this.reglas.size(); i++) {
+            for (int j = 0; j < this.reglas.get(i).condiciones.size(); j++) {
+                
+                if (contadorAtributos >= puntoCruce) {
+                    
+                    AtributoGenetico atributoHijo1 = hijo1.reglas.get(i).condiciones.get(j);
+                    AtributoGenetico atributoHijo2 = hijo2.reglas.get(i).condiciones.get(j);
+                    
+                    hijo1.reglas.get(i).condiciones.remove(j);
+                    hijo2.reglas.get(i).condiciones.remove(j);
+                    
+                    hijo1.reglas.get(i).condiciones.add(j, atributoHijo2);
+                    hijo2.reglas.get(i).condiciones.add(j, atributoHijo1);
+                }
+                
+                contadorAtributos++;
+            }
+        }
+        
+        hijos.add(hijo1);
+        hijos.add(hijo2);
+        return hijos;
+    }
+    
+    
     @Override
     public ArrayList<IndividuoGenetico> cruzar(IndividuoGenetico individuo) {
-        return cruzarUniforme(individuo);
+        
+        Double rand = GestorRand.getDouble();
+        if(rand <= probCruce){
+            //return cruzarUniforme(individuo);
+            return cruzarEnUnPunto(individuo);
+        } else {
+            ArrayList<IndividuoGenetico> padres = new ArrayList<>();
+            padres.add(this);
+            padres.add(individuo);
+            return padres;
+        }
     }
         
     @Override
     public void mutar() {
-        
+        Double rand = GestorRand.getDouble();
+        if(rand <= probMutacion){
+            mutacionAtributoGenetico();
+        }
     }
     
     private void mutacionAtributoGenetico(){
-        Double rand = GestorRand.getDouble();
-        if(rand <= probMutacion){
-            int nReglas = this.reglas.size();
-            int indexRegla = GestorRand.getInt(nReglas);
-            this.reglas.get(indexRegla).mutaUnaCondicion();
-        }
+        int nReglas = this.reglas.size();
+        int indexRegla = GestorRand.getInt(nReglas);
+        this.reglas.get(indexRegla).mutaUnaCondicion();
     }
+    
     @Override
     public Object clone(){
         IndividuoGeneticoPittsburgh clon = new IndividuoGeneticoPittsburgh();

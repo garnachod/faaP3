@@ -14,6 +14,7 @@ import java.util.Random;
 public class GestorRand {
     private static Random random = new Random();
     
+    // Devuelve 1 ó 0
     public static int lanzarMoneda () {
         return random.nextInt(2);
     }
@@ -21,6 +22,7 @@ public class GestorRand {
     public static int getInt(int n){
         return random.nextInt(n);
     }
+    
     public static Double getDouble(){
         return random.nextDouble();
     }

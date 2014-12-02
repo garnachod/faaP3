@@ -3,6 +3,7 @@ package clasificadores;
 import datos.Datos;
 import datos.Elemento;
 import datos.ElementoNominal;
+import individuos.GestorRand;
 import individuos.IndividuoGenetico;
 import individuos.IndividuoGeneticoPittsburgh;
 import individuos.ReglaGenetica;
@@ -65,12 +66,15 @@ public class ClasificadorGenetico extends Clasificador {
             //a pares
             ArrayList<IndividuoGenetico> nuevaPoblacion = new ArrayList<>();
             for(int j = 0; j < this.tam_poblacion; j = j +2){
+                
                 IndividuoGenetico ind1 = this.poblacion.get(j);
                 IndividuoGenetico ind2 = this.poblacion.get(j+1);
+                
                 ArrayList<IndividuoGenetico> hijos =  ind1.cruzar(ind2);
                 for(IndividuoGenetico ind : hijos){
                     nuevaPoblacion.add(ind);
                 }
+                
             }
             this.poblacion = nuevaPoblacion;
             //mutacion
