@@ -18,7 +18,7 @@ import java.util.HashMap;
  */
 public class ClasificadorGenetico extends Clasificador {
     private int tam_poblacion = 100;
-    private int nEpocas = 150;
+    private int nEpocas = 10000;
     private int lastMejorSum = 0;
     private IndividuoGenetico individuoClasificador = null;
     private ArrayList<IndividuoGenetico> poblacion = new ArrayList<>();

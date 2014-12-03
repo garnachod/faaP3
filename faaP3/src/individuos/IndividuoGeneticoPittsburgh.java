@@ -10,9 +10,9 @@ import java.util.Random;
  * @author Diego Castaño y Daniel Garnacho
  */
 public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
-    private static final Double probMutacion = 0.005;
+    private static final Double probMutacion = 0.001;
     private static final Double probCruce = 0.6;
-    private static final int nReglasPorClase = 2;
+    private static final int nReglasPorClase = 3;
     
     public IndividuoGeneticoPittsburgh(){
         this.reglas = new ArrayList<>();
