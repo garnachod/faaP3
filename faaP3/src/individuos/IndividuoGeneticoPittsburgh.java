@@ -10,8 +10,9 @@ import java.util.Random;
  * @author Diego Castaño y Daniel Garnacho
  */
 public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
-    private static final Double probMutacion = 0.1;
+    private static final Double probMutacion = 0.005;
     private static final Double probCruce = 0.6;
+    private static final int nReglasPorClase = 2;
     
     public IndividuoGeneticoPittsburgh(){
         this.reglas = new ArrayList<>();
@@ -23,9 +24,12 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
         HashMap<String, Integer> clasesHSM =  nElemDistintosPColum.get(nElemDistintosPColum.size()-1);
         nElemDistintosPColum.remove(nElemDistintosPColum.size()-1);
         for(String clase: clasesHSM.keySet()){
-            ReglaGenetica regla = new ReglaGenetica();
-            regla.inicializaReglaCondicionesAleatorias(nElemDistintosPColum, clase);
-            this.reglas.add(regla);
+            for(int i = 0; i< nReglasPorClase; i++){
+                ReglaGenetica regla = new ReglaGenetica();
+                regla.inicializaReglaCondicionesAleatorias(nElemDistintosPColum, clase);
+                this.reglas.add(regla);
+            }
+            
         }
         nElemDistintosPColum.add(clasesHSM);
     }
@@ -176,15 +180,15 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
     @Override
     public void mutar() {
         Double rand = GestorRand.getDouble();
-        if(rand <= probMutacion){
-            mutacionAtributoGenetico();
-        }
+        mutacionAtributoGenetico();
     }
     
     private void mutacionAtributoGenetico(){
-        int nReglas = this.reglas.size();
-        int indexRegla = GestorRand.getInt(nReglas);
-        this.reglas.get(indexRegla).mutaUnaCondicion();
+
+        for(ReglaGenetica regla : this.reglas){
+            regla.mutaCondiciones(probMutacion);
+        }
+        
     }
     
     @Override

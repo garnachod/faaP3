@@ -18,7 +18,7 @@ import java.util.HashMap;
  */
 public class ClasificadorGenetico extends Clasificador {
     private int tam_poblacion = 100;
-    private int nEpocas = 200;
+    private int nEpocas = 150;
     private int lastMejorSum = 0;
     private IndividuoGenetico individuoClasificador = null;
     private ArrayList<IndividuoGenetico> poblacion = new ArrayList<>();
@@ -30,7 +30,8 @@ public class ClasificadorGenetico extends Clasificador {
         //elementos son diferentes de cada columna de clasificacion
         Elemento[][] datos = datosTrain.getDatos();
         this.nElemDistintosPorColumna = new ArrayList<>();
-        
+        this.individuoClasificador = null;
+        this.lastMejorSum = 0;
         //se inicializan los hasmaps
         //se usan hashmaps por eficiencia
         for(Elemento e : datos[0]){
@@ -107,18 +108,18 @@ public class ClasificadorGenetico extends Clasificador {
             for(SeccionRuletaPonderada s: seccionesRuleta ){
                 ruleta.addElemento(s);
             }
-            System.out.println(ruleta.getSuma());
+            //System.out.println(ruleta.getSuma());
             nuevaPoblacion = new ArrayList<>();
             if(this.individuoClasificador == null){
                 for(int j = 0; j < this.tam_poblacion; j++){
                     nuevaPoblacion.add(ruleta.getIndividuo());
                 }
             }else{
-                for(int j = 0; j < this.tam_poblacion - 2; j++){
+                for(int j = 0; j < this.tam_poblacion - 1; j++){
                     nuevaPoblacion.add((IndividuoGenetico)ruleta.getIndividuo().clone());
                 }
                 nuevaPoblacion.add((IndividuoGenetico)individuoClasificador.clone());
-                nuevaPoblacion.add((IndividuoGenetico)individuoClasificador.clone());
+                //nuevaPoblacion.add((IndividuoGenetico)individuoClasificador.clone());
             }
            
             
@@ -147,7 +148,7 @@ public class ClasificadorGenetico extends Clasificador {
         for(Elemento[] fila: datos){
             ReglaGenetica individuoTest = this.generaReglaFila(fila);
             String claseStr = this.individuoClasificador.getClase(individuoTest);
-            System.out.println(claseStr);
+            //System.out.println(claseStr);
             ElementoNominal clase = new ElementoNominal(claseStr);
             clasificacion.add(clase);
         }

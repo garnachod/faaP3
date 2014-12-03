@@ -87,16 +87,18 @@ public class AtributoGenetico implements Cloneable {
         return true;
     }
     
-    public void mutaValorGenetico(){
+    public void mutaValorGenetico(double probMutacion){
         int nValores = this.valoresGeneticos.size();
         int indexVal= GestorRand.getInt(nValores);
         ValorGenetico val = this.valoresGeneticos.get(indexVal);
-        
-        if(val.valor == true){
-            val.valor = false;
-        }else{
-            val.valor = true;
+        if(GestorRand.getDouble() <= probMutacion){
+            if(val.valor == true){
+                val.valor = false;
+            }else{
+                val.valor = true;
+            }
         }
+        
     }
     @Override
     public Object clone(){

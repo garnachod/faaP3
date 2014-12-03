@@ -53,11 +53,12 @@ public class ReglaGenetica implements Cloneable {
         }
         return true;
     }
-    public void mutaUnaCondicion(){
-        int nCondiciones = this.condiciones.size();
-        int indexCond = GestorRand.getInt(nCondiciones);
-        AtributoGenetico atrib = this.condiciones.get(indexCond);
-        atrib.mutaValorGenetico();
+    public void mutaCondiciones(double probMutacion){
+       
+        for(AtributoGenetico atrib : this.condiciones){
+            atrib.mutaValorGenetico(probMutacion);
+        }
+        
     }
     
     public String getValueConclusion(){

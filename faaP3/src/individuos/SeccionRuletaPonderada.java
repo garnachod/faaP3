@@ -24,7 +24,7 @@ public class SeccionRuletaPonderada {
         }
     }
     public int getAciertos(){
-        return this.aciertos;
+        return this.aciertos*4;
     }
     public IndividuoGenetico getIndividuo(){
         return this.individuo;
