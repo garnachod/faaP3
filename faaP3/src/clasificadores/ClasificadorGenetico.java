@@ -19,8 +19,8 @@ import java.util.HashMap;
  */
 public class ClasificadorGenetico extends Clasificador {
     private final int tam_poblacion = 100;
-    private final int nEpocas = 3000;
-    private final int nEpocasSinMejora = 300;
+    private final int nEpocas = 5000;
+    private final int nEpocasSinMejora = 600;
     private int nEpocasSMCount = 0;
     private int lastMejorSum = 0;
     private IndividuoGenetico individuoClasificador = null;
@@ -122,10 +122,12 @@ public class ClasificadorGenetico extends Clasificador {
                 nuevaPoblacion.add((IndividuoGenetico)ruleta.getIndividuo().clone());
             }
             SeccionRuletaPonderada mejorSeccion = ruleta.getMejorSeccion();
+            if(this.lastMejorSum < mejorSeccion.getAciertos()){
+                this.nEpocasSMCount = 0;
+            }
             if(this.lastMejorSum <= mejorSeccion.getAciertos()){
                 this.individuoClasificador = mejorSeccion.getIndividuo();
                 this.lastMejorSum  = mejorSeccion.getAciertos();
-                this.nEpocasSMCount = 0;
             }
             this.nEpocasSMCount++;
             if(this.nEpocasSMCount > nEpocasSinMejora){

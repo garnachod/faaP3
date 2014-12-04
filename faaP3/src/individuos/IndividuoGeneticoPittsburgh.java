@@ -13,7 +13,7 @@ import java.util.Random;
 public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
     private static final Double probMutacion = 0.001;
     private static final Double probCruce = 0.6;
-    private static final int nReglas = 30;
+    private static final int nReglas = 9;
     
     public IndividuoGeneticoPittsburgh(){
         this.reglas = new ArrayList<>();
@@ -24,7 +24,7 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
         //por cada nReglas vamos a generar una regla aleatoria con una clase aleatoria
         HashMap<String, Integer> clasesHSM =  nElemDistintosPColum.get(nElemDistintosPColum.size()-1);
         nElemDistintosPColum.remove(nElemDistintosPColum.size()-1);
-        //for(String clase: clasesHSM.keySet()){
+        
         ArrayList<String> clases = new ArrayList<>(clasesHSM.keySet());
         
         for(int i = 0; i< nReglas; i++){
@@ -33,9 +33,7 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
             regla.inicializaReglaCondicionesAleatorias(nElemDistintosPColum, clase);
             this.reglas.add(regla);
         }
-            
-        //}
-        //Collections.shuffle(this.reglas);
+        
         nElemDistintosPColum.add(clasesHSM);
     }
     
@@ -172,8 +170,8 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
         Double rand = GestorRand.getDouble();
         if(rand <= probCruce){
             //return cruzarUniforme(individuo);
-            //return cruzarEnUnPunto(individuo);
-            return cruzarEnDosPuntos(individuo);
+            return cruzarEnUnPunto(individuo);
+            //return cruzarEnDosPuntos(individuo);
         } else {
             ArrayList<IndividuoGenetico> padres = new ArrayList<>();
             padres.add(this);
