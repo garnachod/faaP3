@@ -2,6 +2,7 @@ package individuos;
 
 import datos.Elemento;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -12,7 +13,7 @@ import java.util.Random;
 public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
     private static final Double probMutacion = 0.001;
     private static final Double probCruce = 0.6;
-    private static final int nReglasPorClase = 3;
+    private static final int nReglas = 30;
     
     public IndividuoGeneticoPittsburgh(){
         this.reglas = new ArrayList<>();
@@ -20,17 +21,21 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
     
     @Override
     public void inicializaIndividuo(ArrayList<HashMap<String, Integer>> nElemDistintosPColum){
-        //por cada clase vamos a generar una regla aleatoria
+        //por cada nReglas vamos a generar una regla aleatoria con una clase aleatoria
         HashMap<String, Integer> clasesHSM =  nElemDistintosPColum.get(nElemDistintosPColum.size()-1);
         nElemDistintosPColum.remove(nElemDistintosPColum.size()-1);
-        for(String clase: clasesHSM.keySet()){
-            for(int i = 0; i< nReglasPorClase; i++){
-                ReglaGenetica regla = new ReglaGenetica();
-                regla.inicializaReglaCondicionesAleatorias(nElemDistintosPColum, clase);
-                this.reglas.add(regla);
-            }
-            
+        //for(String clase: clasesHSM.keySet()){
+        ArrayList<String> clases = new ArrayList<>(clasesHSM.keySet());
+        
+        for(int i = 0; i< nReglas; i++){
+            String clase = clases.get(GestorRand.getInt(clases.size()));
+            ReglaGenetica regla = new ReglaGenetica();
+            regla.inicializaReglaCondicionesAleatorias(nElemDistintosPColum, clase);
+            this.reglas.add(regla);
         }
+            
+        //}
+        //Collections.shuffle(this.reglas);
         nElemDistintosPColum.add(clasesHSM);
     }
     
@@ -179,7 +184,6 @@ public class IndividuoGeneticoPittsburgh extends IndividuoGenetico {
         
     @Override
     public void mutar() {
-        Double rand = GestorRand.getDouble();
         mutacionAtributoGenetico();
     }
     

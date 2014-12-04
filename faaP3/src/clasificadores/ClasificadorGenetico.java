@@ -10,6 +10,7 @@ import individuos.ReglaGenetica;
 import individuos.RuletaPonderada;
 import individuos.SeccionRuletaPonderada;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -17,8 +18,10 @@ import java.util.HashMap;
  * @author diego.castaño
  */
 public class ClasificadorGenetico extends Clasificador {
-    private int tam_poblacion = 100;
-    private int nEpocas = 10000;
+    private final int tam_poblacion = 100;
+    private final int nEpocas = 3000;
+    private final int nEpocasSinMejora = 300;
+    private int nEpocasSMCount = 0;
     private int lastMejorSum = 0;
     private IndividuoGenetico individuoClasificador = null;
     private ArrayList<IndividuoGenetico> poblacion = new ArrayList<>();
@@ -30,8 +33,10 @@ public class ClasificadorGenetico extends Clasificador {
         //elementos son diferentes de cada columna de clasificacion
         Elemento[][] datos = datosTrain.getDatos();
         this.nElemDistintosPorColumna = new ArrayList<>();
+        this.poblacion = new ArrayList<>();
         this.individuoClasificador = null;
         this.lastMejorSum = 0;
+        this.nEpocasSMCount = 0;
         //se inicializan los hasmaps
         //se usan hashmaps por eficiencia
         for(Elemento e : datos[0]){
@@ -66,7 +71,8 @@ public class ClasificadorGenetico extends Clasificador {
             //cruce
             //a pares
             ArrayList<IndividuoGenetico> nuevaPoblacion = new ArrayList<>();
-            for(int j = 0; j < this.tam_poblacion; j = j +2){
+            Collections.shuffle(this.poblacion);
+            for(int j = 0; j < this.tam_poblacion ; j+=2){
                 
                 IndividuoGenetico ind1 = this.poblacion.get(j);
                 IndividuoGenetico ind2 = this.poblacion.get(j+1);
@@ -77,6 +83,7 @@ public class ClasificadorGenetico extends Clasificador {
                 }
                 
             }
+            
             this.poblacion = nuevaPoblacion;
             //mutacion
             for(int j = 0; j < this.tam_poblacion; j++){
@@ -110,34 +117,39 @@ public class ClasificadorGenetico extends Clasificador {
             }
             //System.out.println(ruleta.getSuma());
             nuevaPoblacion = new ArrayList<>();
-            if(this.individuoClasificador == null){
-                for(int j = 0; j < this.tam_poblacion; j++){
-                    nuevaPoblacion.add(ruleta.getIndividuo());
-                }
-            }else{
-                for(int j = 0; j < this.tam_poblacion - 1; j++){
-                    nuevaPoblacion.add((IndividuoGenetico)ruleta.getIndividuo().clone());
-                }
-                nuevaPoblacion.add((IndividuoGenetico)individuoClasificador.clone());
-                //nuevaPoblacion.add((IndividuoGenetico)individuoClasificador.clone());
+            
+            for(int j = 0; j < this.tam_poblacion - 2; j++){
+                nuevaPoblacion.add((IndividuoGenetico)ruleta.getIndividuo().clone());
             }
-           
-            
-            this.poblacion = nuevaPoblacion;
-            
             SeccionRuletaPonderada mejorSeccion = ruleta.getMejorSeccion();
             if(this.lastMejorSum <= mejorSeccion.getAciertos()){
                 this.individuoClasificador = mejorSeccion.getIndividuo();
-                this.lastMejorSum  = ruleta.getSuma();
+                this.lastMejorSum  = mejorSeccion.getAciertos();
+                this.nEpocasSMCount = 0;
+            }
+            this.nEpocasSMCount++;
+            if(this.nEpocasSMCount > nEpocasSinMejora){
+                //salimos del bucle de entrenamiento si en nEpocasSinMejora no ha mejorado el clasificador
+                break;
+            }
+                    
+            nuevaPoblacion.add((IndividuoGenetico)individuoClasificador.clone());
+            
+            if(i%32 == 0){
+                //sangre nueva
+                IndividuoGeneticoPittsburgh individuo = new IndividuoGeneticoPittsburgh();
+                individuo.inicializaIndividuo(nElemDistintosPorColumna);
+                nuevaPoblacion.add(individuo);
+                System.out.println(this.lastMejorSum);
+            }else{
+                nuevaPoblacion.add((IndividuoGenetico)individuoClasificador.clone());
             }
             
-            //System.out.println();
+            
+            
+            this.poblacion = nuevaPoblacion;
         }
         
-        
-        //this.individuoClasificador = ruleta.getMejor();
-        //obtencion del mejor clasificador
-        //this.individuoClasificador = this.poblacion.get(0);
     }
 
     @Override
