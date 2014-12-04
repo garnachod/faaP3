@@ -142,7 +142,7 @@ public class ClasificadorGenetico extends Clasificador {
                 IndividuoGeneticoPittsburgh individuo = new IndividuoGeneticoPittsburgh();
                 individuo.inicializaIndividuo(nElemDistintosPorColumna);
                 nuevaPoblacion.add(individuo);
-                System.out.println(this.lastMejorSum);
+                //System.out.println(this.lastMejorSum);
             }else{
                 nuevaPoblacion.add((IndividuoGenetico)individuoClasificador.clone());
             }
