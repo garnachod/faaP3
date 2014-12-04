@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class ClasificadorGenetico extends Clasificador {
     private final int tam_poblacion = 100;
     private final int nEpocas = 5000;
-    private final int nEpocasSinMejora = 600;
+    private final int nEpocasSinMejora = 1000;
     private int nEpocasSMCount = 0;
     private int lastMejorSum = 0;
     private IndividuoGenetico individuoClasificador = null;
@@ -137,7 +137,7 @@ public class ClasificadorGenetico extends Clasificador {
                     
             nuevaPoblacion.add((IndividuoGenetico)individuoClasificador.clone());
             
-            if(i%32 == 0){
+            if(i%64 == 0){
                 //sangre nueva
                 IndividuoGeneticoPittsburgh individuo = new IndividuoGeneticoPittsburgh();
                 individuo.inicializaIndividuo(nElemDistintosPorColumna);
